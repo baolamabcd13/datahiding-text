@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -22,6 +23,7 @@ type Config struct {
 	EmailVerificationRequired bool
 	EmailPort               int
 	AppURL                  string
+	CORSAllowOrigins        []string
 }
 
 // LoadConfig - Tải cấu hình từ file .env
@@ -68,6 +70,10 @@ func LoadConfig() *Config {
 	// Đọc cấu hình AppURL
 	appURL := getEnv("APP_URL", "http://localhost:8080")
 
+	// Đọc cấu hình CORS
+	corsAllowOriginsStr := getEnv("CORS_ALLOW_ORIGINS", "http://localhost:3000")
+	corsAllowOrigins := strings.Split(corsAllowOriginsStr, ",")
+
 	return &Config{
 		DBHost:                  dbHost,
 		DBPort:                  dbPort,
@@ -80,6 +86,7 @@ func LoadConfig() *Config {
 		EmailVerificationRequired: emailVerificationRequired,
 		EmailPort:               emailPort,
 		AppURL:                  appURL,
+		CORSAllowOrigins:        corsAllowOrigins,
 	}
 }
 

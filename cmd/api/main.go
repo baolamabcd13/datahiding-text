@@ -17,6 +17,7 @@ import (
 	"github.com/baolamabcd13/datahiding-text-app/internal/tasks"
 	"github.com/baolamabcd13/datahiding-text-app/internal/user"
 	"github.com/baolamabcd13/datahiding-text-app/internal/validation"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq" // PostgreSQL driver
 	"gorm.io/driver/postgres"
@@ -83,7 +84,17 @@ func main() {
 
 	// Khởi tạo router
 	router := gin.Default()
-	
+
+	// Cấu hình CORS
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     cfg.CORSAllowOrigins,
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
 	// Áp dụng middleware
 	router.Use(middleware.ValidationMiddleware())
 
